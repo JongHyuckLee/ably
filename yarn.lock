@@ -2121,6 +2121,11 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
+"@types/lodash@^4.14.182":
+  version "4.14.182"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.182.tgz#05301a4d5e62963227eaafe0ce04dd77c54ea5c2"
+  integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
+
 "@types/mime@^1":
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.2.tgz#93e25bf9ee75fe0fd80b594bc4feb0e862111b5a"
@@ -5920,6 +5925,11 @@ jest@^27.4.3:
     "@jest/core" "^27.5.1"
     import-local "^3.0.2"
     jest-cli "^27.5.1"
+
+jotai@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.7.3.tgz#b27259f818daa39757c0177b952d416141c28849"
+  integrity sha512-7oyKS1cUlwO8bLvhrSrw3/G2tiprmUjt0eK19z4LMiyScsaeqnFwcr+3xaM6N8Ej6iGd0MmBlGhQsmJcnV6+Fw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

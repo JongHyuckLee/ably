@@ -6,6 +6,7 @@ export const customAxios = (token?: string) => {
   if (token) {
     Object.assign(headers, {
       Authorization: `Bearer ${token}`,
+      "Access-Control-Allow-Origin": "*",
     });
   }
   return axios.create({

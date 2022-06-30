@@ -6,6 +6,9 @@ import Button from "@mui/material/Button";
 import { validateEmail } from "../../utils/stringManipulations";
 import { customAxios } from "../../utils/axiosUtil";
 import { API_LOGIN } from "constants/apis";
+import { useAtom } from "jotai";
+import { modalStateAtom } from "../../store/modal/atoms";
+import { flow, get, defaultTo, debounce } from "lodash/fp";
 const EMAIL = "email";
 const PASSWORD = "password";
 const Home = () => {
@@ -15,19 +18,19 @@ const Home = () => {
     email: false,
     password: false,
   });
-
+  const [modal, setModal] = useAtom(modalStateAtom);
   const setTypeError = (type: "email" | "password", valid: boolean) =>
     setError((prevState) => ({ ...prevState, [type]: valid }));
 
   const validateForm = () => {
     let result = true;
-    if (!email || !validateEmail(email)) {
+    if (!email.trim() || !validateEmail(email.trim())) {
       setTypeError(EMAIL, true);
       result = false;
     } else {
       setTypeError(EMAIL, false);
     }
-    if (!password) {
+    if (!password.trim()) {
       setTypeError(PASSWORD, true);
       result = false;
     } else {
@@ -35,16 +38,25 @@ const Home = () => {
     }
     return result;
   };
-  const onClickSubmit = async () => {
+  const onClickSubmit = debounce(300)(async () => {
     if (!validateForm()) {
       return;
     }
 
     try {
-      const response = await customAxios().get(API_LOGIN);
+      const response = await customAxios().post(API_LOGIN, {
+        email: email.trim(),
+        password: password.trim(),
+      });
       console.log(response);
-    } catch ({ message }) {}
-  };
+    } catch (error) {
+      const message = flow(
+        get("response.data.error.message"),
+        defaultTo(get("message"))
+      )(error);
+      setModal({ open: true, title: "ERROR!!!", message });
+    }
+  });
 
   return (
     <S.Wrapper>

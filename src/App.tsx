@@ -1,13 +1,12 @@
 import React from "react";
 import Routes from "./Routes";
-import Header from "components/Common/Header";
+import Layout from "components/Common/Layout";
 
 function App() {
   return (
-    <div>
-      <Header />
+    <Layout>
       <Routes />
-    </div>
+    </Layout>
   );
 }
 
