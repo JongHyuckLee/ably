@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import * as S from "./styled";
+import React, { useEffect, useState } from "react";
 import * as G from "styles";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -9,6 +8,13 @@ import { API_LOGIN } from "constants/apis";
 import { useAtom } from "jotai";
 import { modalStateAtom } from "../../store/modal/atoms";
 import { flow, get, defaultTo, debounce } from "lodash/fp";
+import { getItem, setItem } from "../../utils/localStorage";
+import { AUTHENTICATION_TOKEN } from "constants/localStorages";
+import { isLoginAtom } from "../../store/user/atoms";
+import { useHistory } from "react-router-dom";
+import { PATH_ACCOUNT } from "constants/paths";
+import { errorFormat } from "../../utils/errorUtil";
+import { ErrorType } from "../../types/errorType";
 const EMAIL = "email";
 const PASSWORD = "password";
 const Home = () => {
@@ -18,7 +24,9 @@ const Home = () => {
     email: false,
     password: false,
   });
-  const [modal, setModal] = useAtom(modalStateAtom);
+  const history = useHistory();
+  const [, setModal] = useAtom(modalStateAtom);
+  const [, setIsLogin] = useAtom(isLoginAtom);
   const setTypeError = (type: "email" | "password", valid: boolean) =>
     setError((prevState) => ({ ...prevState, [type]: valid }));
 
@@ -48,18 +56,26 @@ const Home = () => {
         email: email.trim(),
         password: password.trim(),
       });
-      console.log(response);
+      const accessToken = get("data.accessToken")(response);
+      if (accessToken) {
+        setItem(AUTHENTICATION_TOKEN, accessToken);
+        setIsLogin(true);
+        history.push(PATH_ACCOUNT);
+      }
     } catch (error) {
-      const message = flow(
-        get("response.data.error.message"),
-        defaultTo(get("message"))
-      )(error);
+      const message = errorFormat(error as ErrorType);
       setModal({ open: true, title: "ERROR!!!", message });
     }
   });
 
+  useEffect(() => {
+    if (getItem(AUTHENTICATION_TOKEN)) {
+      history.push(PATH_ACCOUNT);
+    }
+  }, []);
+
   return (
-    <S.Wrapper>
+    <>
       <G.FlexRow>
         <G.FlexColumn style={{ marginRight: "5px" }}>
           <TextField
@@ -78,12 +94,20 @@ const Home = () => {
             error={error.password}
           />
         </G.FlexColumn>
-
-        <Button variant="outlined" onClick={onClickSubmit}>
-          로그인
-        </Button>
+        <G.FlexRow>
+          <Button variant="outlined" onClick={onClickSubmit}>
+            로그인
+          </Button>
+          <Button
+            style={{ marginLeft: "5px" }}
+            variant="contained"
+            onClick={onClickSubmit}
+          >
+            계정 재설정
+          </Button>
+        </G.FlexRow>
       </G.FlexRow>
-    </S.Wrapper>
+    </>
   );
 };
 export default Home;
