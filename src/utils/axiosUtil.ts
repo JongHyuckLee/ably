@@ -10,7 +10,7 @@ export const customAxios = (token?: string) => {
     });
   }
   return axios.create({
-    baseURL: "https://ably-frontend-assignment-server.vercel.app/",
+    baseURL: "https://ably-frontend-assignment-server.vercel.app",
     timeout: 3000,
     headers,
   });

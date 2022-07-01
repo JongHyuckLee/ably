@@ -5,16 +5,16 @@ import Button from "@mui/material/Button";
 import { validateEmail } from "../../utils/stringManipulations";
 import { customAxios } from "../../utils/axiosUtil";
 import { API_LOGIN } from "constants/apis";
-import { useAtom } from "jotai";
 import { modalStateAtom } from "../../store/modal/atoms";
-import { flow, get, defaultTo, debounce } from "lodash/fp";
+import { get, debounce } from "lodash/fp";
 import { getItem, setItem } from "../../utils/localStorage";
 import { AUTHENTICATION_TOKEN } from "constants/localStorages";
 import { isLoginAtom } from "../../store/user/atoms";
 import { useHistory } from "react-router-dom";
-import { PATH_ACCOUNT } from "constants/paths";
+import { PATH_ACCOUNT, PATH_RESET } from "constants/paths";
 import { errorFormat } from "../../utils/errorUtil";
 import { ErrorType } from "../../types/errorType";
+import { useUpdateAtom } from "jotai/utils";
 const EMAIL = "email";
 const PASSWORD = "password";
 const Home = () => {
@@ -25,8 +25,8 @@ const Home = () => {
     password: false,
   });
   const history = useHistory();
-  const [, setModal] = useAtom(modalStateAtom);
-  const [, setIsLogin] = useAtom(isLoginAtom);
+  const setModal = useUpdateAtom(modalStateAtom);
+  const setIsLogin = useUpdateAtom(isLoginAtom);
   const setTypeError = (type: "email" | "password", valid: boolean) =>
     setError((prevState) => ({ ...prevState, [type]: valid }));
 
@@ -101,7 +101,7 @@ const Home = () => {
           <Button
             style={{ marginLeft: "5px" }}
             variant="contained"
-            onClick={onClickSubmit}
+            onClick={() => history.push(PATH_RESET)}
           >
             계정 재설정
           </Button>

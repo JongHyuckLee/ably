@@ -4,9 +4,9 @@ import Layout from "components/Common/Layout";
 
 function App() {
   return (
-    <Layout>
+    <>
       <Routes />
-    </Layout>
+    </>
   );
 }
 
