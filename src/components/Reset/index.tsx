@@ -4,6 +4,7 @@ import { STEPS } from "components/Reset/constants";
 import IssueCode from "components/Reset/IssueCode";
 import ValidateCode from "components/Reset/ValidateCode";
 import ChangePassword from "components/Reset/ChangePassword";
+
 const Reset = () => {
   const context = useContext(ResetContext);
   const { step } = context;
@@ -12,8 +13,8 @@ const Reset = () => {
     () =>
       ({
         [STEPS.ISSUE_CODE]: <IssueCode />,
-        [STEPS.VALIDATE_CODE]: <ValidateCode/>,
-        [STEPS.CHANGE_PASSWORD]: <ChangePassword/>
+        [STEPS.VALIDATE_CODE]: <ValidateCode />,
+        [STEPS.CHANGE_PASSWORD]: <ChangePassword />,
       }[step] || null),
     [step]
   );

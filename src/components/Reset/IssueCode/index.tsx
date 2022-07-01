@@ -11,12 +11,15 @@ import { ErrorType } from "../../../types/errorType";
 import { useUpdateAtom } from "jotai/utils";
 import { modalStateAtom } from "../../../store/modal/atoms";
 import { ResetContext } from "components/Reset/ResetStore";
+import { millisToMinutesAndSeconds } from "../../../utils/timeUtil";
+import { STEPS } from "components/Reset/constants";
 
 const IssueCode = () => {
   const context = useContext(ResetContext);
-  const { setStep, setIssueToken } = context;
+  const { setStep, setIssueToken, email, setEmail, setMinutes, setSeconds } =
+    context;
   const setModal = useUpdateAtom(modalStateAtom);
-  const [email, setEmail] = useState("");
+
   const [isError, setIsError] = useState(false);
   const validateForm = () => {
     if (!email.trim() || !validateEmail(email.trim())) {
@@ -37,7 +40,13 @@ const IssueCode = () => {
           email,
         },
       });
-      console.log(response);
+      const [minutes, seconds] = millisToMinutesAndSeconds(
+        get("data.remainMillisecond")(response)
+      );
+      setIssueToken(get("data.issueToken")(response));
+      setMinutes(minutes as number);
+      setSeconds(seconds as number);
+      setStep(STEPS.VALIDATE_CODE);
     } catch (error) {
       const message = errorFormat(error as ErrorType);
       setModal({ open: true, title: "ERROR!!!", message });
@@ -45,22 +54,27 @@ const IssueCode = () => {
   });
 
   return (
-    <G.FlexRow>
-      <TextField
-        onChange={(e) => setEmail(e.target.value)}
-        type="text"
-        variant="outlined"
-        label="email"
-        error={isError}
-      />
-      <Button
-        style={{ marginLeft: "5px" }}
-        variant="outlined"
-        onClick={onClickSubmit}
-      >
-        인증 코드 발송
-      </Button>
-    </G.FlexRow>
+    <>
+      <G.FlexColumn>
+        <h1>인증 코드 발급 요청 페이지</h1>
+        <G.FlexRow>
+          <TextField
+            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            variant="outlined"
+            label="email"
+            error={isError}
+          />
+          <Button
+            style={{ marginLeft: "5px" }}
+            variant="outlined"
+            onClick={onClickSubmit}
+          >
+            인증 코드 발송
+          </Button>
+        </G.FlexRow>
+      </G.FlexColumn>
+    </>
   );
 };
 export default IssueCode;
